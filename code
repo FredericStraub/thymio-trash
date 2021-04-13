@@ -1,0 +1,60 @@
+import thymio
+counter = 0
+def right():
+	thymio.leftwheel.setpower(80)
+	thymio.rightwheel.setpower(30)
+def left():
+	thymio.leftwheel.setpower(30)
+	thymio.rightwheel.setpower(80)
+def straight():
+	thymio.leftwheel.setpower(100)
+	thymio.rightwheel.setpower(100)
+def back():
+	thymio.leftwheel.setpower(-100)
+	thymio.rightwheel.setpower(-100)
+def line():
+	if thymio.leftline.islinedetected() == False and thymio.rightline.islinedetected() == True:
+		left()
+	if thymio.leftline.islinedetected() == True and thymio.rightline.islinedetected() == False:
+		right()
+	if thymio.leftline.islinedetected() == True and thymio.rightline.islinedetected() == True:
+		straight()
+	if thymio.leftline.islinedetected() == False and thymio.rightline.islinedetected() == False:
+		straight()
+def origin():
+    for i in range(5):
+        thymio.leftwheel.setpower(-100)
+        thymio.rightwheel.setpower(-100)
+    turn_counter = 0
+    while turn_counter < 2:
+        thymio.leftwheel.setpower(100)
+        thymio.rightwheel.setpower(100)
+        if thymio.colorsensor.bluecomponent() > 0:
+            if turn_counter == 0:
+                turn_counter = turn_counter + 1
+                for i in range(5):
+                    thymio.leftwheel.setpower(100)
+                    thymio.rightwheel.setpower(0)
+            if turn_counter == 1:
+                turn_counter = turn_counter + 1 
+                for i in range(5):
+                    thymio.leftwheel.setpower(100)
+                    thymio.rightwheel.setpower(0)
+def stuck():
+	obstacle = 0
+	line = 0
+	for i in range(20):
+		if thymio.2.distancesensor() != 1:
+			obstacle = obstacle + 1
+		if thymio.leftline.islinedetected() == False and thymio.rightline.islinedetected() == False:
+			line = line +1
+		if line > 15 and obstacle > 15:
+			for i in range(50):
+				back()
+while True:
+	if counter == 0:
+		for i in range(50):
+			straight()
+	counter  = counter + 1
+	line()
+	stuck()
